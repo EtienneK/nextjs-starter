@@ -7,7 +7,7 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <Layout>
       <Head>
-        <title>Starter</title>
+        <title>Next.js Starter</title>
       </Head>
       <Component {...pageProps} />
     </Layout>
