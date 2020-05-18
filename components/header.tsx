@@ -1,6 +1,21 @@
+import Link from 'next/link'
+import { useRouter } from 'next/router';
+
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+
+function NavItemLink({ children, href, exact = false }) {
+  const router = useRouter();
+  const active = exact ? router.pathname === href : router.pathname.startsWith(href);
+  return (
+    <Nav.Item>
+      <Link href={href} passHref>
+        <Nav.Link active={active}>{children}</Nav.Link>
+      </Link>
+    </Nav.Item>
+  );
+}
 
 export default function Header() {
   return (
@@ -10,17 +25,11 @@ export default function Header() {
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Nav>
-            <Nav.Item>
-              <Nav.Link href="/" active={true}>Home</Nav.Link>
-            </Nav.Item>
+            <NavItemLink href='/' exact={true}>Home</NavItemLink>
           </Nav>
           <Nav className='ml-auto'>
-            <Nav.Item>
-              <Nav.Link href="#">Login</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="#">Sign up</Nav.Link>
-            </Nav.Item>
+            <NavItemLink href='/account/login'>Login</NavItemLink>
+            <NavItemLink href='/account/sign-up'>Sign Up</NavItemLink>
           </Nav>
         </Navbar.Collapse>
       </Container>
