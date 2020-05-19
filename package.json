@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "bootstrap": "^4.5.0",
     "mongodb": "^3.5.7",
     "mongoose": "^5.9.14",
@@ -17,12 +18,15 @@
     "react-bootstrap": "^1.0.1",
     "react-dom": "16.13.1",
     "react-hook-form": "^5.7.2",
-    "sass": "^1.26.5"
+    "sass": "^1.26.5",
+    "validator": "^13.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/mongoose": "^5.7.20",
     "@types/node": "^14.0.1",
     "@types/react": "^16.9.35",
+    "@types/validator": "^13.0.0",
     "typescript": "^3.9.2"
   }
 }
