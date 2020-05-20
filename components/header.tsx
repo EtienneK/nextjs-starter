@@ -27,7 +27,9 @@ export default function Header(): JSX.Element {
   return (
     <Navbar bg="light" expand="lg" fixed="top" className="border-bottom">
       <Container>
-        <Navbar.Brand href="#home">Next.js Starter</Navbar.Brand>
+        <Link href="/" passHref>
+          <Navbar.Brand>Next.js Starter</Navbar.Brand>
+        </Link>
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Nav>

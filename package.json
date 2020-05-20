@@ -6,7 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint '*/**/*.{js,jsx,ts,tsx}'",
-    "start": "next start"
+    "start": "next start",
+    "test": "echo 'Nothing'"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",
