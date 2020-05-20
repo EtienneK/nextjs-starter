@@ -3,6 +3,10 @@ import { IncomingMessage, NextHandler, ServerResponse } from 'next-connect';
 
 let conn: Connection = null;
 
+export function getMongooseConnection(): Connection {
+  return conn;
+}
+
 export default async function mongooseConnection(
   req: IncomingMessage, res: ServerResponse, next: NextHandler,
 ): Promise<void> {
