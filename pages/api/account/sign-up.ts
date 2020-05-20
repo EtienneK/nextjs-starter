@@ -9,31 +9,36 @@ import AccountModel from '../../../models/Account';
 
 const handler = nextConnect();
 
-handler.use(mongooseConnection);
-
-handler.post(async (req, res) => {
+handler.post(mongooseConnection, async (req, res) => {
   let { email } = req.body;
   const { password, confirmPassword } = req.body;
   const validationErrors = [];
 
-  if (!isEmail(email)) validationErrors.push({
-    field: 'email',
-    message: 'Please enter a valid email address.'
-  })
-  else if (!isLength(email, { min: 5, max: 255 })) validationErrors.push({
-    field: 'email',
-    message: 'Email must be at minimum 5 and at maximum 255 characters in length.'
-  });
+  if (!isEmail(email)) {
+    validationErrors.push({
+      field: 'email',
+      message: 'Please enter a valid email address.',
+    });
+  } else if (!isLength(email, { min: 5, max: 255 })) {
+    validationErrors.push({
+      field: 'email',
+      message: 'Email must be at minimum 5 and at maximum 255 characters in length.',
+    });
+  }
 
-  if (!isLength(password, { min: 8, max: 255 })) validationErrors.push({
-    field: 'password',
-    message: 'Password must be at minimum 8 and at maximum 255 characters in length.'
-  });
+  if (!isLength(password, { min: 8, max: 255 })) {
+    validationErrors.push({
+      field: 'password',
+      message: 'Password must be at minimum 8 and at maximum 255 characters in length.',
+    });
+  }
 
-  if (password !== confirmPassword) validationErrors.push({
-    field: 'confirmPassword',
-    message: 'Passwords do not match.'
-  });
+  if (password !== confirmPassword) {
+    validationErrors.push({
+      field: 'confirmPassword',
+      message: 'Passwords do not match.',
+    });
+  }
 
   if (validationErrors.length) return res.status(400).json({ validationErrors });
 
@@ -43,7 +48,7 @@ handler.post(async (req, res) => {
   if (await Account.exists({ email })) {
     validationErrors.push({
       field: 'email',
-      message: 'An account with this email address already exists.'
+      message: 'An account with this email address already exists.',
     });
     return res.status(400).json({ validationErrors });
   }

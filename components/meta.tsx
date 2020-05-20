@@ -1,6 +1,7 @@
+import React from 'react';
 import Head from 'next/head';
 
-export default function Meta() {
+export default function Meta(): JSX.Element {
   return (
     <Head>
       <meta charSet="utf-8" />

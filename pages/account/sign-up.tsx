@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -14,10 +14,15 @@ import { useForm } from 'react-hook-form';
 
 import isEmail from 'validator/lib/isEmail';
 
+interface LoadingButtonProps {
+  children: React.ReactNode;
+  loading: boolean;
+  loadingText?: string;
+}
 
-function LoadingButton({ children, loading, loadingText = 'Please wait...' }) {
+function LoadingButton({ children, loading, loadingText = 'Please wait...' }: LoadingButtonProps): JSX.Element {
   return (
-    <Button variant="primary" size="lg" block={true} className="mt-4" type="submit">
+    <Button variant="primary" size="lg" block className="mt-4" type="submit">
       {loading && (<Spinner animation="border" size="sm" />)}
       {loading && ` ${loadingText}`}
       {!loading && (children)}
@@ -25,39 +30,41 @@ function LoadingButton({ children, loading, loadingText = 'Please wait...' }) {
   );
 }
 
-export default function SignUp() {
+export default function SignUp(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
-  const { register, handleSubmit, watch, errors, setError } = useForm();
+  const {
+    register, handleSubmit, watch, errors, setError,
+  } = useForm();
   const router = useRouter();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any): Promise<void> => {
     if (loading) return;
     setLoading(true);
     try {
       const res = await fetch('/api/account/sign-up', {
         body: JSON.stringify(data),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        method: 'POST'
+        method: 'POST',
       });
 
       switch (res.status) {
         case 201:
           router.replace('/');
           break;
-        case 400:
+        case 400: {
           const body = await res.json();
           body.validationErrors.forEach((validationError) => {
             setError(validationError.field, 'server', validationError.message);
           });
           setLoading(false);
           break;
+        }
         default:
           throw new Error('An unknown error has occured.');
       }
     } catch (err) {
-      console.log(err);
       setError('unknown', 'unknown');
       setLoading(false);
     }
@@ -73,19 +80,24 @@ export default function SignUp() {
           )}
         </div>
 
-        <Form onSubmit={handleSubmit(onSubmit)} noValidate={true}>
+        <Form onSubmit={handleSubmit(onSubmit)} noValidate>
 
           <Form.Group>
             <Form.Label>Email</Form.Label>
-            <Form.Control name="email" type="email" placeholder="Email" autoFocus={true}
+            <Form.Control
+              name="email"
+              type="email"
+              placeholder="Email"
+              autoFocus
               maxLength={255}
               isInvalid={errors.email}
               ref={register({
                 required: true,
                 minLength: 5,
                 maxLength: 255,
-                validate: isEmail
-              })} />
+                validate: isEmail,
+              })}
+            />
             <Form.Control.Feedback type="invalid">
               {errors.email?.message ? errors.email.message : 'Please enter a valid email address.'}
             </Form.Control.Feedback>
@@ -93,17 +105,21 @@ export default function SignUp() {
 
           <Form.Group>
             <Form.Label>Password</Form.Label>
-            <Form.Control name="password" type="password" placeholder="Password"
+            <Form.Control
+              name="password"
+              type="password"
+              placeholder="Password"
               maxLength={255}
               isInvalid={errors.password}
               ref={register({
                 required: 'Please enter a password.',
                 minLength: {
                   value: 8,
-                  message: 'Password must be at least 8 characters in length.'
+                  message: 'Password must be at least 8 characters in length.',
                 },
-                maxLength: 255
-              })} />
+                maxLength: 255,
+              })}
+            />
             <Form.Control.Feedback type="invalid">
               {errors.password?.message ? errors.password.message : 'Invalid password.'}
             </Form.Control.Feedback>
@@ -111,13 +127,17 @@ export default function SignUp() {
 
           <Form.Group>
             <Form.Label>Confirm password</Form.Label>
-            <Form.Control name="confirmPassword" type="password" placeholder="Confirm password"
+            <Form.Control
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm password"
               maxLength={255}
               isInvalid={errors.confirmPassword}
               ref={register({
                 required: 'Please confirm password.',
-                validate: (data) => data === watch('password')
-              })} />
+                validate: (data) => data === watch('password'),
+              })}
+            />
             <Form.Control.Feedback type="invalid">
               {errors.confirmPassword?.message ? errors.confirmPassword.message : 'Passwords do not match.'}
             </Form.Control.Feedback>

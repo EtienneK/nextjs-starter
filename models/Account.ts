@@ -1,8 +1,10 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { Connection, Document, Model, Schema, SchemaDefinition } from 'mongoose';
+import {
+  Connection, Document, Model, Schema, SchemaDefinition,
+} from 'mongoose';
 
-export interface IAccount extends Document {
+export interface AccountInterface extends Document {
   email: string;
   password: string;
   /**
@@ -21,39 +23,25 @@ const schema: SchemaDefinition = {
 };
 
 const name = 'account';
-const accountSchema: Schema<IAccount> = new Schema<IAccount>(schema);
+const accountSchema: Schema<AccountInterface> = new Schema<AccountInterface>(schema);
 
-/**
- * Password hash middleware.
- */
-accountSchema.pre<IAccount>('save', function save(next) {
-  const account = this;
-  if (!account.isModified('password')) { return next(); }
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) { return next(err); }
-    bcrypt.hash(account.password, salt, (err, hash) => {
-      if (err) { return next(err); }
-      account.password = hash;
-      next();
-    });
-  });
+accountSchema.pre<AccountInterface>('save', async function save() {
+  if (!this.isModified('password')) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
-accountSchema.methods.comparePassword = async function comparePassword(candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
-};
+accountSchema.methods
+  .comparePassword = async function comparePassword(candidatePassword): Promise<boolean> {
+    return bcrypt.compare(candidatePassword, this.password);
+  };
 
-accountSchema.methods.gravatar = function gravatar(size: number) {
-  if (!size) {
-    size = 200;
-  }
-  if (!this.email) {
-    return new URL(`https://gravatar.com/avatar/?s=${size}&d=retro`);
-  }
+accountSchema.methods.gravatar = function gravatar(size = 200): URL {
+  if (!this.email) return new URL(`https://gravatar.com/avatar/?s=${size}&d=retro`);
   const md5 = crypto.createHash('md5').update(this.email).digest('hex');
   return new URL(`https://gravatar.com/avatar/${md5}?s=${size}&d=retro`);
 };
 
-const AccountModel = (conn: Connection): Model<IAccount> => conn.model(name, accountSchema);
+const AccountModel = (conn: Connection): Model<AccountInterface> => conn.model(name, accountSchema);
 
 export default AccountModel;
