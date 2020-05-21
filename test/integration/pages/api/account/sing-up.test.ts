@@ -1,33 +1,23 @@
-import http from 'http';
 import fetch from 'isomorphic-unfetch';
-import listen from 'test-listen';
-import { apiResolver } from 'next/dist/next-server/server/api-utils';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model } from 'mongoose';
 
 import handler from '../../../../../pages/api/account/sign-up';
 import AccountModel, { AccountInterface } from '../../../../../models/Account';
 import { getMongooseConnection } from '../../../../../middlewares/mongoose-connection';
+import ApiTestContext from '../ApiTestContext';
 
 describe('Integration tests for: /api/account/sign-up', () => {
-  let mongoServer: MongoMemoryServer;
-  let server: http.Server;
-  let url: string;
+  let ctx: ApiTestContext;
   let Account: Model<AccountInterface, {}>;
 
   beforeAll(async () => {
-    server = http.createServer((req, res) => apiResolver(req, res, undefined, handler, undefined));
-    url = await listen(server);
-
-    mongoServer = new MongoMemoryServer();
-    process.env.MONGODB_URI = await mongoServer.getUri();
-
+    ctx = new ApiTestContext();
+    await ctx.init(handler);
     Account = AccountModel(await getMongooseConnection());
   });
 
   afterAll(async (done) => {
-    server.close(done);
-    await mongoServer.stop();
+    await ctx.destroy(done);
   });
 
   beforeEach(async () => {
@@ -42,7 +32,7 @@ describe('Integration tests for: /api/account/sign-up', () => {
     const body = JSON.stringify({ email, password, confirmPassword: password });
 
     // Act
-    const response = await fetch(url, {
+    const response = await fetch(ctx.serverUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +53,7 @@ describe('Integration tests for: /api/account/sign-up', () => {
     const body = undefined;
 
     // Act
-    const response = await fetch(url, {
+    const response = await fetch(ctx.serverUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,6 +72,104 @@ describe('Integration tests for: /api/account/sign-up', () => {
     const passwordErrors = responseBody.validationErrors.filter((ve) => ve.field === 'password');
     expect(passwordErrors.length).toEqual(1);
     expect(passwordErrors[0].message).toBeDefined();
+    expect(await Account.countDocuments({})).toEqual(0);
+  });
+
+  test('Should return 400 with validation error if invalid email is sent', async () => {
+    // Arrange
+    const body = JSON.stringify({ email: 'not@valid', password, confirmPassword: password });
+
+    // Act
+    const response = await fetch(ctx.serverUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    // Assert
+    const responseBody = await response.json();
+    expect(response.status).toBe(400);
+    expect(responseBody.validationErrors).toBeDefined();
+    expect(responseBody.validationErrors.length).toEqual(1);
+    const emailErrors = responseBody.validationErrors.filter((ve) => ve.field === 'email');
+    expect(emailErrors.length).toEqual(1);
+    expect(emailErrors[0].message).toContain('valid email');
+    expect(await Account.countDocuments({})).toEqual(0);
+  });
+
+  test('Should return 400 with validation error if email alreasy exists', async () => {
+    // Arrange
+    const account = { email, password, confirmPassword: password };
+    await new Account(account).save();
+    const body = JSON.stringify(account);
+
+    // Act
+    const response = await fetch(ctx.serverUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    // Assert
+    const responseBody = await response.json();
+    expect(response.status).toBe(400);
+    expect(responseBody.validationErrors).toBeDefined();
+    expect(responseBody.validationErrors.length).toEqual(1);
+    const emailErrors = responseBody.validationErrors.filter((ve) => ve.field === 'email');
+    expect(emailErrors.length).toEqual(1);
+    expect(emailErrors[0].message).toContain('already exists');
+    expect(await Account.countDocuments({})).toEqual(1);
+  });
+
+  test('Should return 400 with validation errors if password is less than 8 characters in length', async () => {
+    // Arrange
+    const body = JSON.stringify({ email, password: '1234567', confirmPassword: '1234567' });
+
+    // Act
+    const response = await fetch(ctx.serverUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    // Assert
+    const responseBody = await response.json();
+    expect(response.status).toBe(400);
+    expect(responseBody.validationErrors).toBeDefined();
+    expect(responseBody.validationErrors.length).toEqual(1);
+    const passwordErrors = responseBody.validationErrors.filter((ve) => ve.field === 'password');
+    expect(passwordErrors.length).toEqual(1);
+    expect(passwordErrors[0].message).toContain('length');
+    expect(await Account.countDocuments({})).toEqual(0);
+  });
+
+  test('Should return 400 with validation errors if password and confirmPassword do not match', async () => {
+    // Arrange
+    const body = JSON.stringify({ email, password, confirmPassword: `${password}1` });
+
+    // Act
+    const response = await fetch(ctx.serverUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    // Assert
+    const responseBody = await response.json();
+    expect(response.status).toBe(400);
+    expect(responseBody.validationErrors).toBeDefined();
+    expect(responseBody.validationErrors.length).toEqual(1);
+    const confirmPasswordErrors = responseBody.validationErrors.filter((ve) => ve.field === 'confirmPassword');
+    expect(confirmPasswordErrors.length).toEqual(1);
+    expect(confirmPasswordErrors[0].message).toContain('match');
     expect(await Account.countDocuments({})).toEqual(0);
   });
 });
