@@ -34,10 +34,11 @@ describe('Integration tests for: /api/account/sign-up', () => {
     await Account.deleteMany({});
   });
 
+  const email = 'me@example.com';
+  const password = 'password123';
+
   test('Should create a new account successfully', async () => {
     // Arrange
-    const email = 'me@example.com';
-    const password = 'password123';
     const body = JSON.stringify({ email, password, confirmPassword: password });
 
     // Act
@@ -75,8 +76,12 @@ describe('Integration tests for: /api/account/sign-up', () => {
     expect(response.status).toBe(400);
     expect(responseBody.validationErrors).toBeDefined();
     expect(responseBody.validationErrors.length).toEqual(2);
-    expect(responseBody.validationErrors.filter((ve) => ve.field === 'email').length).toEqual(1);
-    expect(responseBody.validationErrors.filter((ve) => ve.field === 'password').length).toEqual(1);
+    const emailErrors = responseBody.validationErrors.filter((ve) => ve.field === 'email');
+    expect(emailErrors.length).toEqual(1);
+    expect(emailErrors[0].message).toBeDefined();
+    const passwordErrors = responseBody.validationErrors.filter((ve) => ve.field === 'password');
+    expect(passwordErrors.length).toEqual(1);
+    expect(passwordErrors[0].message).toBeDefined();
     expect(await Account.countDocuments({})).toEqual(0);
   });
 });

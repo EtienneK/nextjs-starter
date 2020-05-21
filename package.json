@@ -8,8 +8,8 @@
     "lint": "eslint '*/**/*.{js,jsx,ts,tsx}'",
     "start": "next start",
     "test": "jest --runInBand --detectOpenHandles --forceExit",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:watch": "jest --watch --runInBand --detectOpenHandles",
+    "test:coverage": "jest --coverage --runInBand --detectOpenHandles"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",
