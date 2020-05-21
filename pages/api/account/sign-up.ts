@@ -14,7 +14,7 @@ handler.post(mongooseConnection, async (req, res) => {
   const { password, confirmPassword } = req.body;
   const validationErrors = [];
 
-  if (!isEmail(email)) {
+  if (!email || !isEmail(email)) {
     validationErrors.push({
       field: 'email',
       message: 'Please enter a valid email address.',
@@ -26,7 +26,7 @@ handler.post(mongooseConnection, async (req, res) => {
     });
   }
 
-  if (!isLength(password, { min: 8, max: 255 })) {
+  if (!password || !isLength(password, { min: 8, max: 255 })) {
     validationErrors.push({
       field: 'password',
       message: 'Password must be at minimum 8 and at maximum 255 characters in length.',

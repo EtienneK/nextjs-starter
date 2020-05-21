@@ -7,7 +7,7 @@
     "dev": "next dev",
     "lint": "eslint '*/**/*.{js,jsx,ts,tsx}'",
     "start": "next start",
-    "test": "jest --forceExit",
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
