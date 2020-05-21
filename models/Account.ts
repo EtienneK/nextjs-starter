@@ -14,7 +14,7 @@ export interface AccountInterface extends Document {
   /**
    * Helper method for getting user's gravatar.
    */
-  gravatar: (size: number) => URL;
+  gravatar: (size?: number) => URL;
 }
 
 const schema: SchemaDefinition = {
@@ -22,7 +22,7 @@ const schema: SchemaDefinition = {
   password: { type: String, required: true },
 };
 
-const name = 'account';
+const accountModelName = 'Account';
 const accountSchema: Schema<AccountInterface> = new Schema<AccountInterface>(schema);
 
 accountSchema.pre<AccountInterface>('save', async function save() {
@@ -42,6 +42,9 @@ accountSchema.methods.gravatar = function gravatar(size = 200): URL {
   return new URL(`https://gravatar.com/avatar/${md5}?s=${size}&d=retro`);
 };
 
-const AccountModel = (conn: Connection): Model<AccountInterface> => conn.model(name, accountSchema);
+const AccountModel = (conn: Connection): Model<AccountInterface> => conn.model(
+  accountModelName,
+  accountSchema,
+);
 
 export default AccountModel;

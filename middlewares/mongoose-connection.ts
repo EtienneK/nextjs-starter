@@ -1,3 +1,4 @@
+import assert from 'assert';
 import mongoose, { Connection } from 'mongoose';
 import { IncomingMessage, NextHandler, ServerResponse } from 'next-connect';
 
@@ -21,6 +22,7 @@ export default async function mongooseConnection(
 ): Promise<void> {
   try {
     await getMongooseConnection();
+    assert(conn);
     (req as any).mongooseConnection = conn;
 
     return next();
