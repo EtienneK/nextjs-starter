@@ -25,7 +25,7 @@ function NavItemLink({ children, href, exact = false }: NavItemLinkProps): JSX.E
 
 export default function Header(): JSX.Element {
   return (
-    <Navbar bg="light" expand="lg" fixed="top" className="border-bottom">
+    <Navbar bg="light" expand="lg" fixed="top" className="border-bottom" collapseOnSelect>
       <Container>
         <Link href="/" passHref>
           <Navbar.Brand>Next.js Starter</Navbar.Brand>
