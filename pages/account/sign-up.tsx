@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
@@ -71,92 +70,88 @@ export default function SignUp(): JSX.Element {
   };
 
   return (
-    <Container className="ml-auto mr-auto mt-4" style={{ maxWidth: '360px' }}>
-      <Card className="bg-light p-4">
-        <div className="text-center">
-          <h1 className="display-6">Sign up</h1>
-          {errors.unknown && (
-            <Alert variant="danger">An unknown error has occured. Please try again later.</Alert>
-          )}
+    <Container className="ml-auto mr-auto mt-5" style={{ maxWidth: '420px' }}>
+      <div className="text-center">
+        <h1 className="h3">Sign up</h1>
+        {errors.unknown && (
+          <Alert variant="danger">An unknown error has occured. Please try again later.</Alert>
+        )}
+      </div>
+
+      <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+
+        <Form.Group>
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            name="email"
+            type="email"
+            placeholder="Email address"
+            autoFocus
+            maxLength={255}
+            isInvalid={errors.email}
+            ref={register({
+              required: true,
+              minLength: 5,
+              maxLength: 255,
+              validate: isEmail,
+            })}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.email?.message ? errors.email.message : 'Please enter a valid email address.'}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            name="password"
+            type="password"
+            placeholder="Password"
+            maxLength={255}
+            isInvalid={errors.password}
+            ref={register({
+              required: 'Please enter a password.',
+              minLength: {
+                value: 8,
+                message: 'Password must be at least 8 characters in length.',
+              },
+              maxLength: 255,
+            })}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.password?.message ? errors.password.message : 'Invalid password.'}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Confirm password</Form.Label>
+          <Form.Control
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm password"
+            maxLength={255}
+            isInvalid={errors.confirmPassword}
+            ref={register({
+              required: 'Please confirm password.',
+              validate: (data) => data === watch('password'),
+            })}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.confirmPassword?.message ? errors.confirmPassword.message : 'Passwords do not match.'}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <LoadingButton loading={loading}>Create account</LoadingButton>
+
+        <div className="mt-4 text-center">
+          <p className="m-0">Already have an account?</p>
+          <p>
+            <Link href="/account/login">
+              <a className="font-weight-bold">Login</a>
+            </Link>
+          </p>
         </div>
-
-        <Form onSubmit={handleSubmit(onSubmit)} noValidate>
-
-          <Form.Group>
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              name="email"
-              type="email"
-              placeholder="Email"
-              autoFocus
-              maxLength={255}
-              isInvalid={errors.email}
-              ref={register({
-                required: true,
-                minLength: 5,
-                maxLength: 255,
-                validate: isEmail,
-              })}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.email?.message ? errors.email.message : 'Please enter a valid email address.'}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              name="password"
-              type="password"
-              placeholder="Password"
-              maxLength={255}
-              isInvalid={errors.password}
-              ref={register({
-                required: 'Please enter a password.',
-                minLength: {
-                  value: 8,
-                  message: 'Password must be at least 8 characters in length.',
-                },
-                maxLength: 255,
-              })}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.password?.message ? errors.password.message : 'Invalid password.'}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Confirm password</Form.Label>
-            <Form.Control
-              name="confirmPassword"
-              type="password"
-              placeholder="Confirm password"
-              maxLength={255}
-              isInvalid={errors.confirmPassword}
-              ref={register({
-                required: 'Please confirm password.',
-                validate: (data) => data === watch('password'),
-              })}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.confirmPassword?.message ? errors.confirmPassword.message : 'Passwords do not match.'}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <LoadingButton loading={loading}>Create account</LoadingButton>
-
-          <div className="mt-4 text-center">
-            <p className="m-0">
-              Already have an account?
-            </p>
-            <p>
-              <Link href="/account/login">
-                <a className="font-weight-bold">Login</a>
-              </Link>
-            </p>
-          </div>
-        </Form>
-      </Card>
+      </Form>
     </Container>
   );
 }
