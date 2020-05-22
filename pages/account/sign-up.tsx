@@ -87,6 +87,7 @@ export default function SignUp(): JSX.Element {
             type="email"
             placeholder="Email address"
             autoFocus
+            disabled={loading}
             maxLength={255}
             isInvalid={errors.email}
             ref={register({
@@ -107,6 +108,7 @@ export default function SignUp(): JSX.Element {
             name="password"
             type="password"
             placeholder="Password"
+            disabled={loading}
             maxLength={255}
             isInvalid={errors.password}
             ref={register({
@@ -129,6 +131,7 @@ export default function SignUp(): JSX.Element {
             name="confirmPassword"
             type="password"
             placeholder="Confirm password"
+            disabled={loading}
             maxLength={255}
             isInvalid={errors.confirmPassword}
             ref={register({
