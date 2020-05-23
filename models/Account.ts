@@ -42,9 +42,10 @@ accountSchema.methods.gravatar = function gravatar(size = 200): URL {
   return new URL(`https://gravatar.com/avatar/${md5}?s=${size}&d=retro`);
 };
 
-const AccountModel = (conn: Connection): Model<AccountInterface> => conn.model(
-  accountModelName,
-  accountSchema,
-);
+const AccountModel = (conn: Connection): Model<AccountInterface> => (
+  conn.models.Account ? conn.models.Account : conn.model(
+    accountModelName,
+    accountSchema,
+  ));
 
 export default AccountModel;

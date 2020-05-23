@@ -4,30 +4,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import Spinner from 'react-bootstrap/Spinner';
 
 import { useForm } from 'react-hook-form';
 
 import isEmail from 'validator/lib/isEmail';
-
-interface LoadingButtonProps {
-  children: React.ReactNode;
-  loading: boolean;
-  loadingText?: string;
-}
-
-function LoadingButton({ children, loading, loadingText = 'Please wait...' }: LoadingButtonProps): JSX.Element {
-  return (
-    <Button variant="primary" size="lg" block className="mt-4" type="submit">
-      {loading && (<Spinner animation="border" size="sm" />)}
-      {loading && ` ${loadingText}`}
-      {!loading && (children)}
-    </Button>
-  );
-}
+import LoadingButton from '../../components/LoadingButton';
 
 export default function SignUp(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
