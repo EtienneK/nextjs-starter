@@ -11,7 +11,7 @@ export default function session(req: RequestWithConn, res, next): any {
   });
   return expressSession({
     store: mongoStore,
-    secret: 'super-secret-secret',
+    secret: process.env.SECUREKEY.split(','),
     saveUninitialized: false,
     resave: false,
   })(req as any, res, next);

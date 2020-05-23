@@ -18,7 +18,9 @@ export default class ApiTestContext {
     );
     this._serverUrl = await listen(this._server);
     this._mongoServer = new MongoMemoryServer();
+
     process.env.MONGODB_URI = await this._mongoServer.getUri();
+    process.env.SECUREKEY = 'enwkjngjnerkgnnkjreg,kjrbgrbegbjrebger';
   }
 
   async destroy(done: jest.DoneCallback): Promise<void> {
