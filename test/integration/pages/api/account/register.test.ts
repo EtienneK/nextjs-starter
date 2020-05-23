@@ -24,10 +24,10 @@ describe('Integration tests for: /api/account/register', () => {
     await Account.deleteMany({});
   });
 
-  const email = 'me@example.com';
+  const email = 'ME@EXAMPLE.COM';
   const password = 'password123';
 
-  test('Should create a new account successfully', async () => {
+  test('POST Should create a new account successfully', async () => {
     // Arrange
     const body = JSON.stringify({ email, password, confirmPassword: password });
 
@@ -43,12 +43,12 @@ describe('Integration tests for: /api/account/register', () => {
     // Assert
     expect(response.status).toBe(201);
     expect(await response.text()).toEqual('');
-    const foundUser = await Account.findOne({ email });
-    expect(foundUser.email).toEqual(email);
+    const foundUser = await Account.findOne({ email: email.toLowerCase() });
+    expect(foundUser.email).toEqual(email.toLowerCase());
     expect(await Account.countDocuments({})).toEqual(1);
   });
 
-  test('Should return 400 with validation errors if no body is sent', async () => {
+  test('POST Should return 400 with validation errors if no body is sent', async () => {
     // Arrange
     const body = undefined;
 
@@ -75,7 +75,7 @@ describe('Integration tests for: /api/account/register', () => {
     expect(await Account.countDocuments({})).toEqual(0);
   });
 
-  test('Should return 400 with validation error if invalid email is sent', async () => {
+  test('POST Should return 400 with validation error if invalid email is sent', async () => {
     // Arrange
     const body = JSON.stringify({ email: 'not@valid', password, confirmPassword: password });
 
@@ -99,11 +99,11 @@ describe('Integration tests for: /api/account/register', () => {
     expect(await Account.countDocuments({})).toEqual(0);
   });
 
-  test('Should return 400 with validation error if email alreasy exists', async () => {
+  test('POST Should return 400 with validation error if email alreasy exists', async () => {
     // Arrange
-    const account = { email, password, confirmPassword: password };
+    const account = { email: email.toLowerCase(), password };
     await new Account(account).save();
-    const body = JSON.stringify(account);
+    const body = JSON.stringify({ ...account, confirmPassword: password });
 
     // Act
     const response = await fetch(ctx.serverUrl, {
@@ -125,7 +125,7 @@ describe('Integration tests for: /api/account/register', () => {
     expect(await Account.countDocuments({})).toEqual(1);
   });
 
-  test('Should return 400 with validation errors if password is less than 8 characters in length', async () => {
+  test('POST Should return 400 with validation errors if password is less than 8 characters in length', async () => {
     // Arrange
     const body = JSON.stringify({ email, password: '1234567', confirmPassword: '1234567' });
 
@@ -149,7 +149,7 @@ describe('Integration tests for: /api/account/register', () => {
     expect(await Account.countDocuments({})).toEqual(0);
   });
 
-  test('Should return 400 with validation errors if password and confirmPassword do not match', async () => {
+  test('POST Should return 400 with validation errors if password and confirmPassword do not match', async () => {
     // Arrange
     const body = JSON.stringify({ email, password, confirmPassword: `${password}1` });
 

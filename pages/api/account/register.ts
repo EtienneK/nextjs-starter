@@ -1,6 +1,7 @@
 import isEmail from 'validator/lib/isEmail';
 import isLength from 'validator/lib/isLength';
 import normalizeEmail from 'validator/lib/normalizeEmail';
+import nocache from 'nocache';
 
 import nextConnect from 'next-connect';
 import mongooseConnection, { RequestWithConn } from '../../../middlewares/mongoose-connection';
@@ -12,6 +13,7 @@ import AccountModel from '../../../models/Account';
 const handler = nextConnect();
 
 handler.post(
+  nocache(),
   mongooseConnection,
   session,
   passport.initialize() as any,
@@ -65,7 +67,7 @@ handler.post(
 
     return req.login(account, (err) => {
       if (err) throw err;
-      return res.status(201).send(null);
+      return res.status(201).end();
     });
   },
 );

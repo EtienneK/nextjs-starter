@@ -21,6 +21,7 @@
     "mongoose": "^5.9.14",
     "next": "9.4.1",
     "next-connect": "^0.6.6",
+    "nocache": "^2.1.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "react": "16.13.1",
@@ -41,6 +42,7 @@
     "@types/passport": "^1.0.3",
     "@types/passport-local": "^1.0.33",
     "@types/react": "^16.9.35",
+    "@types/set-cookie-parser": "0.0.6",
     "@types/test-listen": "^1.1.0",
     "@types/validator": "^13.0.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
@@ -55,6 +57,7 @@
     "eslint-plugin-react-hooks": "^4.0.2",
     "jest": "^26.0.1",
     "mongodb-memory-server": "^6.6.1",
+    "set-cookie-parser": "^2.4.5",
     "test-listen": "^1.1.0",
     "ts-jest": "^26.0.0",
     "typescript": "^3.9.3"
