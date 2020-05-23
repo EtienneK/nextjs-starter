@@ -37,7 +37,7 @@ export default function Header(): JSX.Element {
           </Nav>
           <Nav className="ml-auto">
             <NavItemLink href="/account/login">Login</NavItemLink>
-            <NavItemLink href="/account/sign-up">Sign Up</NavItemLink>
+            <NavItemLink href="/account/register">Sign Up</NavItemLink>
           </Nav>
         </Navbar.Collapse>
       </Container>

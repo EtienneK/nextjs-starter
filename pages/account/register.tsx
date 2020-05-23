@@ -40,7 +40,7 @@ export default function SignUp(): JSX.Element {
     if (loading) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/account/sign-up', {
+      const res = await fetch('/api/account/register', {
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',

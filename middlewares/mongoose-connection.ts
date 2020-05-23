@@ -17,13 +17,15 @@ export async function getMongooseConnection(): Promise<Connection> {
   return conn;
 }
 
+export type RequestWithConn = IncomingMessage & { mongooseConnection: Connection };
+
 export default async function mongooseConnection(
-  req: IncomingMessage, res: ServerResponse, next: NextHandler,
+  req: RequestWithConn, res: ServerResponse, next: NextHandler,
 ): Promise<void> {
   try {
     await getMongooseConnection();
     assert(conn);
-    (req as any).mongooseConnection = conn;
+    req.mongooseConnection = conn;
 
     return next();
   } catch (err) {

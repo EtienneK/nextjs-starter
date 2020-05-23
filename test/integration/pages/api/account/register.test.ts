@@ -1,12 +1,12 @@
 import fetch from 'isomorphic-unfetch';
 import { Model } from 'mongoose';
 
-import handler from '../../../../../pages/api/account/sign-up';
+import handler from '../../../../../pages/api/account/register';
 import AccountModel, { AccountInterface } from '../../../../../models/Account';
 import { getMongooseConnection } from '../../../../../middlewares/mongoose-connection';
 import ApiTestContext from '../ApiTestContext';
 
-describe('Integration tests for: /api/account/sign-up', () => {
+describe('Integration tests for: /api/account/register', () => {
   let ctx: ApiTestContext;
   let Account: Model<AccountInterface, {}>;
 
