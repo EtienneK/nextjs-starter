@@ -23,7 +23,9 @@ const schema: SchemaDefinition = {
 };
 
 const accountModelName = 'Account';
-const accountSchema: Schema<AccountInterface> = new Schema<AccountInterface>(schema);
+const accountSchema: Schema<AccountInterface> = new Schema<AccountInterface>(
+  schema, { timestamps: true },
+);
 
 accountSchema.pre<AccountInterface>('save', async function save() {
   if (!this.isModified('password')) return;

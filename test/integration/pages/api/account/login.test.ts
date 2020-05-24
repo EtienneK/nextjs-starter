@@ -120,6 +120,5 @@ describe('Integration tests for: /api/account/login', () => {
     // Assert
     expect(response.status).toBe(200);
     expect(await response.text()).toEqual('');
-    expect(response.headers.get('set-cookie')).toBeNull();
   });
 });
