@@ -3,7 +3,6 @@ import nocache from 'nocache';
 import mongooseConnection from '../../../middlewares/mongoose-connection';
 import session from '../../../middlewares/session';
 import passport from '../../../middlewares/passport';
-import { AccountInterface } from '../../../models/Account';
 
 const handler = nextConnect();
 
@@ -15,10 +14,7 @@ handler.get(
   passport.session() as any,
   async (req, res) => {
     if ((req as any).user) {
-      const user = (req as any).user as AccountInterface;
-      return res.status(200).json({
-        id: user.id,
-      });
+      return res.status(200).end();
     }
     return res.status(401).end();
   },
