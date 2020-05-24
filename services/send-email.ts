@@ -4,7 +4,7 @@ export default async function sendEmail(
   to: string, subject: string, content: { type: string; value: string },
 ): Promise<void> {
   const helper = sendgrid.mail;
-  const fromEmail = new helper.Email(process.env.EMAIL_FROM);
+  const fromEmail = new helper.Email(process.env.NEXT_PUBLIC_EMAIL_FROM);
   const toEmail = new helper.Email(to);
   const mail = new helper.Mail(fromEmail, subject, toEmail, content);
 

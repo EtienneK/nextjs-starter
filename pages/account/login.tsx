@@ -14,7 +14,7 @@ import isEmail from 'validator/lib/isEmail';
 import LoadingButton from '../../components/LoadingButton';
 import useIsAuthenticated from '../../hooks/useIsAuthenticated';
 
-export default function SignUp(): JSX.Element {
+export default function ForgotPassword(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const {
     register, handleSubmit, errors, setError,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import getConfig from 'next/config';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import Alert from 'react-bootstrap/Alert';
@@ -13,7 +14,6 @@ import isEmail from 'validator/lib/isEmail';
 
 import LoadingButton from '../../../components/LoadingButton';
 import useIsAuthenticated from '../../../hooks/useIsAuthenticated';
-import Link from 'next/link';
 
 export default function SignUp(): JSX.Element {
   const { publicRuntimeConfig: { appName } } = getConfig();
@@ -24,7 +24,7 @@ export default function SignUp(): JSX.Element {
   } = useForm();
   const router = useRouter();
 
-  const { data: isAuthenticatedData, mutate } = useIsAuthenticated();
+  const { data: isAuthenticatedData } = useIsAuthenticated();
   useEffect(() => { if (isAuthenticatedData && isAuthenticatedData.isAuthenticated) router.replace('/'); }, [isAuthenticatedData]);
 
   const onSubmit = async (data: any): Promise<void> => {

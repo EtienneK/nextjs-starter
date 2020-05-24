@@ -1,3 +1,4 @@
+import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -26,6 +27,7 @@ function NavItemLink({ children, href, exact = false }: NavItemLinkProps): JSX.E
 }
 
 export default function Header(): JSX.Element {
+  const { publicRuntimeConfig: { appName } } = getConfig();
   const { data, mutate } = useIsAuthenticated();
 
   const router = useRouter();
@@ -64,7 +66,7 @@ export default function Header(): JSX.Element {
     <Navbar bg="light" expand="lg" fixed="top" collapseOnSelect>
       <Container>
         <Link href="/" passHref>
-          <Navbar.Brand>Next.js Starter</Navbar.Brand>
+          <Navbar.Brand>{appName}</Navbar.Brand>
         </Link>
         <Navbar.Toggle />
         <Navbar.Collapse>
