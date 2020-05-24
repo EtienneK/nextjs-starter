@@ -14,5 +14,9 @@ export default function session(req: RequestWithConn, res, next): any {
     secret: process.env.SECUREKEY.split(','),
     saveUninitialized: false,
     resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 14, // 14 days
+      sameSite: 'lax',
+    },
   })(req as any, res, next);
 }
