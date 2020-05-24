@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -10,7 +10,9 @@ import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
 
 import isEmail from 'validator/lib/isEmail';
+
 import LoadingButton from '../../components/LoadingButton';
+import useIsAuthenticated from '../../hooks/useIsAuthenticated';
 
 export default function SignUp(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,6 +20,9 @@ export default function SignUp(): JSX.Element {
     register, handleSubmit, errors, setError,
   } = useForm();
   const router = useRouter();
+
+  const { isAuthenticated, mutate } = useIsAuthenticated();
+  useEffect(() => { if (isAuthenticated) router.replace('/'); }, [isAuthenticated]);
 
   const onSubmit = async (data: any): Promise<void> => {
     if (loading) return;
@@ -33,6 +38,7 @@ export default function SignUp(): JSX.Element {
 
       switch (res.status) {
         case 200:
+          mutate(true);
           router.replace('/');
           break;
         case 401: {

@@ -4,6 +4,7 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import useIsAuthenticated from '../hooks/useIsAuthenticated';
 
 interface NavItemLinkProps {
   children: React.ReactNode;
@@ -24,6 +25,18 @@ function NavItemLink({ children, href, exact = false }: NavItemLinkProps): JSX.E
 }
 
 export default function Header(): JSX.Element {
+  const { isAuthenticated, mutate } = useIsAuthenticated();
+
+  const router = useRouter();
+
+  const logout = async (): Promise<void> => {
+    await fetch('/api/account/login', {
+      method: 'DELETE',
+    });
+    mutate(false);
+    router.replace('/');
+  };
+
   return (
     <Navbar bg="light" expand="lg" fixed="top" collapseOnSelect>
       <Container>
@@ -35,10 +48,21 @@ export default function Header(): JSX.Element {
           <Nav>
             <NavItemLink href="/" exact>Home</NavItemLink>
           </Nav>
-          <Nav className="ml-auto">
-            <NavItemLink href="/account/login">Login</NavItemLink>
-            <NavItemLink href="/account/register">Sign Up</NavItemLink>
-          </Nav>
+          {
+            isAuthenticated ? (
+              <Nav className="ml-auto">
+                <NavItemLink href="/account/profile">Profile</NavItemLink>
+                <Nav.Item>
+                  <Nav.Link onClick={logout}>Logout</Nav.Link>
+                </Nav.Item>
+              </Nav>
+            ) : (
+              <Nav className="ml-auto">
+                <NavItemLink href="/account/login">Login</NavItemLink>
+                <NavItemLink href="/account/register">Sign Up</NavItemLink>
+              </Nav>
+            )
+          }
         </Navbar.Collapse>
       </Container>
     </Navbar>
