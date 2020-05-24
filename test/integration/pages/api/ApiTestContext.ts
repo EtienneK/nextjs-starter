@@ -4,6 +4,7 @@ import listen from 'test-listen';
 import { apiResolver } from 'next/dist/next-server/server/api-utils';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { NextConnect } from 'next-connect';
+import loginHandler from '../../../../pages/api/account/login';
 
 export default class ApiTestContext {
   _mongoServer: MongoMemoryServer;
@@ -13,6 +14,8 @@ export default class ApiTestContext {
   _serverUrl: string;
 
   async init(handler: NextConnect): Promise<void> {
+    handler.use('/login', loginHandler);
+
     this._server = http.createServer(
       (req, res) => apiResolver(req, res, undefined, handler, undefined),
     );
