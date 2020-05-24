@@ -1,6 +1,4 @@
-import isEmail from 'validator/lib/isEmail';
 import isLength from 'validator/lib/isLength';
-import normalizeEmail from 'validator/lib/normalizeEmail';
 import nocache from 'nocache';
 
 import nextConnect from 'next-connect';
@@ -9,6 +7,8 @@ import session from '../../../middlewares/session';
 import passport, { RequestWithLogin } from '../../../middlewares/passport';
 
 import AccountModel from '../../../models/Account';
+import ValidationError from '../../../validations/ValidationError';
+import validateEmail, { normaliseEmail } from '../../../validations/email';
 
 const handler = nextConnect();
 
@@ -21,19 +21,9 @@ handler.post(
   async (req: RequestWithConn & RequestWithLogin, res) => {
     let { email } = req.body;
     const { password, confirmPassword } = req.body;
-    const validationErrors = [];
-
-    if (!email || !isEmail(email)) {
-      validationErrors.push({
-        field: 'email',
-        message: 'Please enter a valid email address.',
-      });
-    } else if (!isLength(email, { min: 5, max: 255 })) {
-      validationErrors.push({
-        field: 'email',
-        message: 'Email must be at minimum 5 and at maximum 255 characters in length.',
-      });
-    }
+    const validationErrors: Array<ValidationError> = [
+      ...validateEmail(email),
+    ];
 
     if (!password || !isLength(password, { min: 8, max: 255 })) {
       validationErrors.push({
@@ -53,7 +43,7 @@ handler.post(
 
     const Account = AccountModel(req.mongooseConnection);
 
-    email = normalizeEmail(req.body.email, { gmail_remove_dots: false });
+    email = normaliseEmail(email);
     if (await Account.exists({ email })) {
       validationErrors.push({
         field: 'email',

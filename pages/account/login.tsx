@@ -102,6 +102,10 @@ export default function SignUp(): JSX.Element {
           />
         </Form.Group>
 
+        <p className="float-right">
+          <Link href="/account/forgot-password"><a>Forgot password?</a></Link>
+        </p>
+
         <LoadingButton loading={loading}>Login</LoadingButton>
 
         <div className="mt-4 text-center">

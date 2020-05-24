@@ -4,10 +4,12 @@ import {
 
 export interface ForgotPasswordTokenInterface extends Document {
   token: string;
+  accountId: string;
 }
 
 const schemaDefinition: SchemaDefinition = {
   token: { type: String, required: true, unique: true },
+  accountId: { type: String, required: true, unique: true },
 };
 
 const modelName = 'ForgotPasswordToken';
@@ -15,7 +17,7 @@ const schema: Schema<ForgotPasswordTokenInterface> = new Schema<ForgotPasswordTo
   schemaDefinition, { timestamps: true },
 );
 schema.index({ createdAt: 1 }, {
-  expireAfterSeconds: 1 * 24 * 60 * 60, // 1 day
+  expireAfterSeconds: 30 * 60, // 30 minutes
 });
 
 const ForgotPasswordTokenModel = (conn: Connection): Model<ForgotPasswordTokenInterface> => (
