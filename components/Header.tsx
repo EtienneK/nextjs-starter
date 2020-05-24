@@ -4,6 +4,7 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Spinner from 'react-bootstrap/Spinner';
 import useIsAuthenticated from '../hooks/useIsAuthenticated';
 
 interface NavItemLinkProps {
@@ -25,7 +26,7 @@ function NavItemLink({ children, href, exact = false }: NavItemLinkProps): JSX.E
 }
 
 export default function Header(): JSX.Element {
-  const { isAuthenticated, mutate } = useIsAuthenticated();
+  const { data, mutate } = useIsAuthenticated();
 
   const router = useRouter();
 
@@ -36,6 +37,28 @@ export default function Header(): JSX.Element {
     mutate(false);
     router.replace('/');
   };
+
+  const IsAuthenticatedStillLoading = (
+    <Nav className="ml-auto">
+      <Nav.Item>
+        <Nav.Link><Spinner animation="border" size="sm" /></Nav.Link>
+      </Nav.Item>
+    </Nav>
+  );
+
+  const IsAuthenticatedLoaded = (data && data.isAuthenticated ? (
+    <Nav className="ml-auto">
+      <NavItemLink href="/account">Account</NavItemLink>
+      <Nav.Item>
+        <Nav.Link onClick={logout}>Logout</Nav.Link>
+      </Nav.Item>
+    </Nav>
+  ) : (
+    <Nav className="ml-auto">
+      <NavItemLink href="/account/login">Login</NavItemLink>
+      <NavItemLink href="/account/register">Sign Up</NavItemLink>
+    </Nav>
+  ));
 
   return (
     <Navbar bg="light" expand="lg" fixed="top" collapseOnSelect>
@@ -48,21 +71,7 @@ export default function Header(): JSX.Element {
           <Nav>
             <NavItemLink href="/" exact>Home</NavItemLink>
           </Nav>
-          {
-            isAuthenticated ? (
-              <Nav className="ml-auto">
-                <NavItemLink href="/account">Account</NavItemLink>
-                <Nav.Item>
-                  <Nav.Link onClick={logout}>Logout</Nav.Link>
-                </Nav.Item>
-              </Nav>
-            ) : (
-              <Nav className="ml-auto">
-                <NavItemLink href="/account/login">Login</NavItemLink>
-                <NavItemLink href="/account/register">Sign Up</NavItemLink>
-              </Nav>
-            )
-          }
+          {data ? IsAuthenticatedLoaded : IsAuthenticatedStillLoading}
         </Navbar.Collapse>
       </Container>
     </Navbar>

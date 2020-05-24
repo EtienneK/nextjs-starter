@@ -21,8 +21,8 @@ export default function SignUp(): JSX.Element {
   } = useForm();
   const router = useRouter();
 
-  const { isAuthenticated, mutate } = useIsAuthenticated();
-  useEffect(() => { if (isAuthenticated) router.replace('/'); }, [isAuthenticated]);
+  const { data: isAuthenticatedData, mutate } = useIsAuthenticated();
+  useEffect(() => { if (isAuthenticatedData && isAuthenticatedData.isAuthenticated) router.replace('/'); }, [isAuthenticatedData]);
 
   const onSubmit = async (data: any): Promise<void> => {
     if (loading) return;

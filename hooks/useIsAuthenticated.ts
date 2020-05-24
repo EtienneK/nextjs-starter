@@ -1,8 +1,20 @@
 import useSWR from 'swr';
 
-const fetcher = (url: string): Promise<boolean> => fetch(url).then((r) => r.status === 200);
+interface Wrapper {
+  isAuthenticated: boolean;
+}
 
-export default function useIsAuthenticated(): { isAuthenticated: boolean; mutate: any } {
-  const { data: isAuthenticated, mutate } = useSWR('/api/account/session', fetcher);
-  return { isAuthenticated, mutate };
+const fetcher = (url: string): Promise<Wrapper> => fetch(url)
+  .then((r) => r.status === 200)
+  .then((isAuthenticated) => ({ isAuthenticated }));
+
+export default function useIsAuthenticated(): {
+  data: Wrapper;
+  mutate: (isAuthenticated: boolean) => Promise<Wrapper>;
+} {
+  const { data, mutate: wrappedMutate } = useSWR('/api/account/session', fetcher);
+  return {
+    data,
+    mutate: (isAuthenticated: boolean): Promise<Wrapper> => wrappedMutate({ isAuthenticated }),
+  };
 }
