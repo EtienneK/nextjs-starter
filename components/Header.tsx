@@ -51,7 +51,7 @@ export default function Header(): JSX.Element {
           {
             isAuthenticated ? (
               <Nav className="ml-auto">
-                <NavItemLink href="/account/profile">Profile</NavItemLink>
+                <NavItemLink href="/account">Account</NavItemLink>
                 <Nav.Item>
                   <Nav.Link onClick={logout}>Logout</Nav.Link>
                 </Nav.Item>
