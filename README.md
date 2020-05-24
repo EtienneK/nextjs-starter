@@ -2,7 +2,7 @@
 
 **WARNING: Still under active development - not meant for production**
 
-[Demo running on now.sh](https://nextjs-starter-etk.now.sh/)
+[Demo running on now.sh](https://nextjs-starter.etiennek.now.sh/)
 
 ## Features
 
