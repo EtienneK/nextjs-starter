@@ -69,8 +69,8 @@ export default function ForgotPassword(): JSX.Element {
       <p>
         <b>Please note:</b>
         &nbsp;If you have requested an email reset previously and have not
-        received an email yet, then you may have to wait 30 minutes before
-        requesting another password reset.
+        received an email, please check your Spam folder.
+        Otherwise, you may have to wait 30 minutes before requesting another password reset.
       </p>
       <p className="text-center">
         <Link href="/account/login"><a className="btn btn-primary btn-block">Proceed to Login</a></Link>

@@ -49,7 +49,7 @@ handler.post(
 
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/account/forgot-password/${token}`;
 
-    sendEmail(email, `Forgotten password reset for your ${appName} account`, {
+    await sendEmail(email, `Forgotten password reset for your ${appName} account`, {
       type: 'text/html',
       value: `
         <p><b>Hi,</b></p>
