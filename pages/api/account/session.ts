@@ -3,6 +3,7 @@ import nocache from 'nocache';
 import mongooseConnection from '../../../middlewares/mongoose-connection';
 import session from '../../../middlewares/session';
 import passport from '../../../middlewares/passport';
+import isAuthenticated from '../../../middlewares/is-authenticated';
 
 const handler = nextConnect();
 
@@ -12,12 +13,8 @@ handler.get(
   session,
   passport.initialize() as any,
   passport.session() as any,
-  async (req, res) => {
-    if ((req as any).user) {
-      return res.status(200).end();
-    }
-    return res.status(401).end();
-  },
+  isAuthenticated,
+  async (req, res) => res.status(200).end(),
 );
 
 export default handler;
