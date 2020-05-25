@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import Alert from 'react-bootstrap/Alert';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 
 import { useForm } from 'react-hook-form';
@@ -15,6 +14,7 @@ import isEmail from 'validator/lib/isEmail';
 import LoadingButton from '../../components/LoadingButton';
 import useIsAuthenticated from '../../hooks/useIsAuthenticated';
 import PasswordChange from '../../components/PasswordChange';
+import AccountContainer from '../../components/AccountContainer';
 
 export default function SignUp(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
@@ -61,7 +61,7 @@ export default function SignUp(): JSX.Element {
   };
 
   return (
-    <Container className="ml-auto mr-auto mt-5" style={{ maxWidth: '420px' }}>
+    <AccountContainer>
       <div className="text-center">
         <h1 className="h3">Sign up</h1>
         {errors.unknown && (
@@ -114,6 +114,6 @@ export default function SignUp(): JSX.Element {
           </p>
         </div>
       </Form>
-    </Container>
+    </AccountContainer>
   );
 }

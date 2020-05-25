@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import Alert from 'react-bootstrap/Alert';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 
 import { useForm } from 'react-hook-form';
@@ -15,6 +14,7 @@ import isEmail from 'validator/lib/isEmail';
 
 import LoadingButton from '../../../components/LoadingButton';
 import useIsAuthenticated from '../../../hooks/useIsAuthenticated';
+import AccountContainer from '../../../components/AccountContainer';
 
 export default function ForgotPassword(): JSX.Element {
   const { publicRuntimeConfig: { appName } } = getConfig();
@@ -82,7 +82,7 @@ export default function ForgotPassword(): JSX.Element {
   );
 
   return (
-    <Container className="ml-auto mr-auto mt-5" style={{ maxWidth: '420px' }}>
+    <AccountContainer>
       <div className="text-center">
         <h1 className="h3">Forgot Password</h1>
         {errors.unknown && (
@@ -127,6 +127,6 @@ export default function ForgotPassword(): JSX.Element {
           </>
         )
       }
-    </Container>
+    </AccountContainer>
   );
 }
