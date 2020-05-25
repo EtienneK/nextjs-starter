@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BsPersonPlus } from 'react-icons/bs';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,6 +14,7 @@ import isEmail from 'validator/lib/isEmail';
 
 import LoadingButton from '../../components/LoadingButton';
 import useIsAuthenticated from '../../hooks/useIsAuthenticated';
+import PasswordChange from '../../components/PasswordChange';
 
 export default function SignUp(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
@@ -91,49 +93,17 @@ export default function SignUp(): JSX.Element {
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group>
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            name="password"
-            type="password"
-            placeholder="Password"
-            disabled={loading}
-            maxLength={255}
-            isInvalid={errors.password}
-            ref={register({
-              required: 'Please enter a password.',
-              minLength: {
-                value: 8,
-                message: 'Password must be at least 8 characters in length.',
-              },
-              maxLength: 255,
-            })}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.password?.message ? errors.password.message : 'Invalid password.'}
-          </Form.Control.Feedback>
-        </Form.Group>
+        <PasswordChange
+          loading={loading}
+          register={register}
+          watch={watch}
+          errors={errors}
+        />
 
-        <Form.Group>
-          <Form.Label>Confirm password</Form.Label>
-          <Form.Control
-            name="confirmPassword"
-            type="password"
-            placeholder="Confirm password"
-            disabled={loading}
-            maxLength={255}
-            isInvalid={errors.confirmPassword}
-            ref={register({
-              required: 'Please confirm password.',
-              validate: (data) => data === watch('password'),
-            })}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.confirmPassword?.message ? errors.confirmPassword.message : 'Passwords do not match.'}
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <LoadingButton loading={loading}>Create account</LoadingButton>
+        <LoadingButton loading={loading}>
+          <BsPersonPlus />
+          &nbsp;Create account
+        </LoadingButton>
 
         <div className="mt-4 text-center">
           <p className="m-0">Already have an account?</p>

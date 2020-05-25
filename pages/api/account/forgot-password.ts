@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import nextConnect from 'next-connect';
 import nocache from 'nocache';
 import getConfig from 'next/config';
+import { ObjectId } from 'mongodb';
 
 import mongooseConnection, { RequestWithConn } from '../../../middlewares/mongoose-connection';
 import sendEmail from '../../../services/send-email';
@@ -10,10 +11,38 @@ import validateEmail, { normaliseEmail } from '../../../validations/email';
 
 import ForgotPasswordTokenModel from '../../../models/ForgotPasswordToken';
 import AccountModel from '../../../models/Account';
+import validatePasswordChange from '../../../validations/password-change';
 
 const { publicRuntimeConfig: { appName } } = getConfig();
 
 const handler = nextConnect();
+
+handler.patch(
+  nocache(),
+  mongooseConnection,
+  async (req: RequestWithConn, res) => {
+    const { password, confirmPassword, token } = req.body;
+
+    const validationErrors: Array<ValidationError> = [
+      ...validatePasswordChange(password, confirmPassword),
+    ];
+
+    if (validationErrors.length) return res.status(400).json({ validationErrors });
+
+    const ForgotPasswordToken = ForgotPasswordTokenModel(req.mongooseConnection);
+    const forgotPasswordToken = await ForgotPasswordToken.findOne({ token });
+    if (!forgotPasswordToken) return res.status(404).end();
+
+    const Account = AccountModel(req.mongooseConnection);
+    const account = await Account.findById(forgotPasswordToken.accountId);
+    if (!account) return res.status(404).end();
+
+    account.password = password;
+    await account.save();
+
+    return res.status(200).end();
+  },
+);
 
 handler.post(
   nocache(),

@@ -8,9 +8,11 @@ import Row from 'react-bootstrap/Row';
 export default function Home(): JSX.Element {
   return (
     <>
-      <Jumbotron>
+      <Jumbotron className="text-center">
         <Container>
-          <h1 className="display-3">Next.js Starter</h1>
+          <h1 className="display-3">
+            Next.js Starter
+          </h1>
           <p className="lead">A boilerplate for Next.js web applications.</p>
         </Container>
       </Jumbotron>

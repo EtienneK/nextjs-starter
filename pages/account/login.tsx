@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FiLogIn } from 'react-icons/fi';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -106,7 +107,10 @@ export default function Login(): JSX.Element {
           <Link href="/account/forgot-password"><a>Forgot password?</a></Link>
         </p>
 
-        <LoadingButton loading={loading}>Login</LoadingButton>
+        <LoadingButton loading={loading}>
+          <FiLogIn />
+          &nbsp;Login
+        </LoadingButton>
 
         <div className="mt-4 text-center">
           <p className="m-0">Don&apos;t have an account yet?</p>

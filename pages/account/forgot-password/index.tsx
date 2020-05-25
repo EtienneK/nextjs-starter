@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BsCheckBox } from 'react-icons/bs';
 
 import getConfig from 'next/config';
 import Link from 'next/link';
@@ -62,18 +63,20 @@ export default function ForgotPassword(): JSX.Element {
 
   const PostSubmit = (
     <>
+      <Alert variant="success">
+        <BsCheckBox />
+        &nbsp;We have sent you an email with password reset instructions,
+        if the email address you&apos;ve entered exists in our system.
+      </Alert>
       <p>
-        If the email address you&apos;ve entered is in our system then we
-        have sent you an email with details on how to reset your password.
+        Please check your spam folder if you did not receive an email.
       </p>
       <p>
-        <b>Please note:</b>
-        &nbsp;If you have requested an email reset previously and have not
-        received an email, please check your Spam folder.
-        Otherwise, you may have to wait 30 minutes before requesting another password reset.
+        Otherwise, you will have to wait 30 minutes for your previous password
+        reset request to expire before being able to request another.
       </p>
       <p className="text-center">
-        <Link href="/account/login"><a className="btn btn-primary btn-block">Proceed to Login</a></Link>
+        <Link href="/account/login"><a>Proceed to Login</a></Link>
       </p>
     </>
   );

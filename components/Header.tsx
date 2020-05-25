@@ -1,7 +1,11 @@
+import React from 'react';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import {
+  BsArrowBarRight, BsHouse, BsPersonSquare, BsPersonPlus, BsLightning,
+} from 'react-icons/bs';
+import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -50,28 +54,53 @@ export default function Header(): JSX.Element {
 
   const IsAuthenticatedLoaded = (data && data.isAuthenticated ? (
     <Nav className="ml-auto">
-      <NavItemLink href="/account">Account</NavItemLink>
+      <NavItemLink href="/account">
+        <BsPersonSquare />
+        &nbsp;Account
+      </NavItemLink>
       <Nav.Item>
-        <Nav.Link onClick={logout}>Logout</Nav.Link>
+        <Nav.Link onClick={logout}>
+          <FiLogOut />
+          &nbsp;Logout
+        </Nav.Link>
       </Nav.Item>
     </Nav>
   ) : (
     <Nav className="ml-auto">
-      <NavItemLink href="/account/login">Login</NavItemLink>
-      <NavItemLink href="/account/register">Sign Up</NavItemLink>
+      <NavItemLink href="/account/login">
+        <FiLogIn />
+        &nbsp;Login
+      </NavItemLink>
+      <NavItemLink href="/account/register">
+        <BsPersonPlus />
+        &nbsp;Sign Up
+      </NavItemLink>
     </Nav>
   ));
 
   return (
-    <Navbar bg="light" expand="lg" fixed="top" collapseOnSelect>
+    <Navbar bg="light" expand="lg" collapseOnSelect>
       <Container>
         <Link href="/" passHref>
-          <Navbar.Brand>{appName}</Navbar.Brand>
+          <Nav.Link>
+            <Navbar.Brand className="font-weight-bold">
+              <BsLightning />
+              &nbsp;
+              {appName}
+            </Navbar.Brand>
+          </Nav.Link>
         </Link>
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Nav>
-            <NavItemLink href="/" exact>Home</NavItemLink>
+            <NavItemLink href="/" exact>
+              <BsHouse />
+              &nbsp;Home
+            </NavItemLink>
+            <NavItemLink href="/proxy-example">
+              <BsArrowBarRight />
+              &nbsp;Proxy Example
+            </NavItemLink>
           </Nav>
           {data ? IsAuthenticatedLoaded : IsAuthenticatedStillLoading}
         </Navbar.Collapse>
