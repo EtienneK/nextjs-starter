@@ -31,7 +31,7 @@ handler.post(
   mongooseConnection,
   async (req: RequestWithConn, res) => {
     const { query: { token } } = req;
-    if (!token) return res.status(404).end();
+    if (!token || isArray(token)) return res.status(404).end();
 
     const { password, confirmPassword } = req.body;
 
