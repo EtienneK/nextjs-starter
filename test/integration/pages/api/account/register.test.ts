@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-unfetch';
 import { Model } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 import handler from '../../../../../pages/api/account/register';
 import AccountModel, { AccountInterface } from '../../../../../models/Account';
@@ -45,6 +46,7 @@ describe('Integration tests for: /api/account/register', () => {
     expect(await response.text()).toEqual('');
     const foundUser = await Account.findOne({ email: email.toLowerCase() });
     expect(foundUser.email).toEqual(email.toLowerCase());
+    expect(await bcrypt.compare(password, foundUser.password)).toBeTruthy();
     expect(await Account.countDocuments({})).toEqual(1);
   });
 

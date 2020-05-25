@@ -2,7 +2,6 @@ import { nanoid } from 'nanoid';
 import nextConnect from 'next-connect';
 import nocache from 'nocache';
 import getConfig from 'next/config';
-import { ObjectId } from 'mongodb';
 
 import mongooseConnection, { RequestWithConn } from '../../../middlewares/mongoose-connection';
 import sendEmail from '../../../services/send-email';
