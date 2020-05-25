@@ -16,7 +16,7 @@ import AccountContainer from '../../../components/AccountContainer';
 enum CurrentState {
   CheckingToken,
   ResetPasswordForm,
-  Loading,
+  ResetPasswordFormSubmitted,
   Success,
   Expired,
   Unknown,
@@ -55,8 +55,8 @@ export default function ForgotPasswordReset(): JSX.Element {
   useEffect(() => { if (isAuthenticatedData && isAuthenticatedData.isAuthenticated) router.replace('/'); }, [isAuthenticatedData]);
 
   const onSubmit = async (data: any): Promise<void> => {
-    if (currentState === CurrentState.Loading) return;
-    setCurrentState(CurrentState.Loading);
+    if (currentState === CurrentState.ResetPasswordFormSubmitted) return;
+    setCurrentState(CurrentState.ResetPasswordFormSubmitted);
     try {
       const res = await fetch(`/api/account/forgot-password/${token}`, {
         body: JSON.stringify({ ...data, token }),
@@ -97,7 +97,8 @@ export default function ForgotPasswordReset(): JSX.Element {
     );
   }
 
-  if (currentState === CurrentState.ResetPasswordForm || currentState === CurrentState.Loading) {
+  if (currentState === CurrentState.ResetPasswordForm
+    || currentState === CurrentState.ResetPasswordFormSubmitted) {
     return (
       <AccountContainer>
         <div className="text-center">
@@ -112,13 +113,13 @@ export default function ForgotPasswordReset(): JSX.Element {
         <Form onSubmit={handleSubmit(onSubmit)} noValidate>
 
           <PasswordChange
-            loading={currentState === CurrentState.Loading}
+            loading={currentState === CurrentState.ResetPasswordFormSubmitted}
             register={register}
             watch={watch}
             errors={errors}
           />
 
-          <LoadingButton loading={currentState === CurrentState.Loading}>
+          <LoadingButton loading={currentState === CurrentState.ResetPasswordFormSubmitted}>
             Reset Password
           </LoadingButton>
 
