@@ -9,9 +9,9 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '../../../components/LoadingButton';
-import useIsAuthenticated from '../../../hooks/useIsAuthenticated';
 import PasswordChange from '../../../components/PasswordChange';
 import AccountContainer from '../../../components/AccountContainer';
+import useIsAuthenticated from '../../../hooks/useIsAuthenticated';
 
 enum CurrentState {
   CheckingToken,
@@ -25,6 +25,7 @@ enum CurrentState {
 export default function ForgotPasswordReset(): JSX.Element {
   const router = useRouter();
   const { token } = router.query;
+  const { data: isAuthenticatedData } = useIsAuthenticated();
 
   const [currentState, setCurrentState] = useState<CurrentState>(CurrentState.CheckingToken);
 
@@ -32,7 +33,7 @@ export default function ForgotPasswordReset(): JSX.Element {
     if (!token) return;
     if (currentState !== CurrentState.CheckingToken) return;
 
-    fetch(`/api/account/forgot-password/${token}`)
+    fetch(`/api/account/reset-password/${token}`)
       .then((res) => {
         switch (res.status) {
           case 200:
@@ -51,14 +52,11 @@ export default function ForgotPasswordReset(): JSX.Element {
     register, handleSubmit, watch, errors, setError,
   } = useForm();
 
-  const { data: isAuthenticatedData } = useIsAuthenticated();
-  useEffect(() => { if (isAuthenticatedData && isAuthenticatedData.isAuthenticated) router.replace('/'); }, [isAuthenticatedData]);
-
   const onSubmit = async (data: any): Promise<void> => {
     if (currentState === CurrentState.ResetPasswordFormSubmitted) return;
     setCurrentState(CurrentState.ResetPasswordFormSubmitted);
     try {
-      const res = await fetch(`/api/account/forgot-password/${token}`, {
+      const res = await fetch(`/api/account/reset-password/${token}`, {
         body: JSON.stringify({ ...data, token }),
         headers: {
           'Content-Type': 'application/json',
@@ -92,6 +90,7 @@ export default function ForgotPasswordReset(): JSX.Element {
   if (currentState === CurrentState.CheckingToken) {
     return (
       <AccountContainer className="text-center">
+        <h1 className="h3">Password reset</h1>
         <Spinner animation="border" />
       </AccountContainer>
     );
@@ -102,7 +101,7 @@ export default function ForgotPasswordReset(): JSX.Element {
     return (
       <AccountContainer>
         <div className="text-center">
-          <h1 className="h3">Forgot password reset</h1>
+          <h1 className="h3">Password reset</h1>
           {errors.unknown && (
             <Alert variant="danger">An unknown error has occured. Please try again later.</Alert>
           )}
@@ -132,8 +131,10 @@ export default function ForgotPasswordReset(): JSX.Element {
     return (
       <AccountContainer>
         <Alert variant="success">
-          <p>Your password has successfully been reset.</p>
-          <p className="text-center"><Link href="/account/login"><a>Proceed to Login</a></Link></p>
+          <p>Your password has successfully been changed.</p>
+          {isAuthenticatedData?.isAuthenticated
+            ? (<p className="text-center"><Link href="/account"><a>Proceed to account</a></Link></p>)
+            : (<p className="text-center"><Link href="/account/login"><a>Proceed to Login</a></Link></p>)}
         </Alert>
       </AccountContainer>
     );
@@ -143,7 +144,7 @@ export default function ForgotPasswordReset(): JSX.Element {
     return (
       <AccountContainer>
         <Alert variant="warning">
-          <p>Your forgot password reset request has expired.</p>
+          <p>Your forgot password reset request is invalid or has expired.</p>
           <p className="text-center"><Link href="/account/forgot-password"><a>Send another reset request</a></Link></p>
         </Alert>
       </AccountContainer>

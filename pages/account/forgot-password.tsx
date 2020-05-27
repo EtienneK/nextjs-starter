@@ -12,9 +12,9 @@ import { useForm } from 'react-hook-form';
 
 import isEmail from 'validator/lib/isEmail';
 
-import LoadingButton from '../../../components/LoadingButton';
-import useIsAuthenticated from '../../../hooks/useIsAuthenticated';
-import AccountContainer from '../../../components/AccountContainer';
+import LoadingButton from '../../components/LoadingButton';
+import useIsAuthenticated from '../../hooks/useIsAuthenticated';
+import AccountContainer from '../../components/AccountContainer';
 
 export default function ForgotPassword(): JSX.Element {
   const { publicRuntimeConfig: { appName } } = getConfig();
@@ -26,13 +26,15 @@ export default function ForgotPassword(): JSX.Element {
   const router = useRouter();
 
   const { data: isAuthenticatedData } = useIsAuthenticated();
-  useEffect(() => { if (isAuthenticatedData && isAuthenticatedData.isAuthenticated) router.replace('/'); }, [isAuthenticatedData]);
+  useEffect(() => {
+    if (isAuthenticatedData && isAuthenticatedData.isAuthenticated) router.replace('/account');
+  }, [isAuthenticatedData]);
 
   const onSubmit = async (data: any): Promise<void> => {
     if (loading) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/account/forgot-password', {
+      const res = await fetch('/api/account/reset-password', {
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',

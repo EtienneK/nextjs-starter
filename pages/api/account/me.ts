@@ -21,9 +21,6 @@ handler.get(
     res.status(200).json({
       id,
       email,
-      avatar: {
-        med: account.gravatar(72),
-      },
     });
   },
 );

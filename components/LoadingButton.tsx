@@ -10,7 +10,7 @@ interface Props {
 
 export default function LoadingButton({ children, loading, loadingText = 'Please wait...' }: Props): JSX.Element {
   return (
-    <Button variant="primary" size="lg" block className="mt-4" type="submit">
+    <Button variant="primary" size="lg" block type="submit">
       {loading && (<Spinner animation="border" size="sm" />)}
       {loading && ` ${loadingText}`}
       {!loading && (children)}

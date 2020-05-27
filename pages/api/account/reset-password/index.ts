@@ -47,7 +47,7 @@ handler.post(
     });
     await forgotPasswordToken.save();
 
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/account/forgot-password/${token}`;
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/account/reset-password/${token}`;
 
     await sendEmail(email, `Forgotten password reset for your ${appName} account`, {
       type: 'text/html',

@@ -103,7 +103,7 @@ export default function Login(): JSX.Element {
           />
         </Form.Group>
 
-        <p className="float-right">
+        <p className="float-right small">
           <Link href="/account/forgot-password"><a>Forgot password?</a></Link>
         </p>
 

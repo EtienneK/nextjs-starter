@@ -32,21 +32,4 @@ describe('Account Model', () => {
     // Assert
     expect(matched).toBeFalsy();
   });
-
-  it('should generate gravatar without email and size', () => {
-    const account = new Account();
-    expect(account.gravatar().toString()).toContain('gravatar.com');
-  });
-
-  it('should generate gravatar with size', () => {
-    const account = new Account();
-    const size = 300;
-    expect(account.gravatar(size).toString()).toContain(`s=${size}`);
-  });
-
-  it('should generate gravatar with email', () => {
-    const account = new Account({ email: 'me@example.com' });
-    const md5 = '2e0d5407ce8609047b8255c50405d7b1';
-    expect(account.gravatar().toString()).toContain(md5);
-  });
 });
