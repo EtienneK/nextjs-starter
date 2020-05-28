@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -10,7 +10,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Spinner from 'react-bootstrap/Spinner';
-import useIsAuthenticated from '../hooks/useIsAuthenticated';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 interface NavItemLinkProps {
   children: React.ReactNode;
@@ -32,16 +32,19 @@ function NavItemLink({ children, href, exact = false }: NavItemLinkProps): JSX.E
 
 export default function Header(): JSX.Element {
   const { publicRuntimeConfig: { appName } } = getConfig();
-  const { data, mutate } = useIsAuthenticated();
+  const { wrappedUser, mutate } = useCurrentUser();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const router = useRouter();
 
   const logout = async (): Promise<void> => {
+    setIsLoggingOut(true);
     await fetch('/api/account/login', {
       method: 'DELETE',
     });
-    mutate(false);
+    mutate(null);
     router.replace('/');
+    setIsLoggingOut(false);
   };
 
   const IsAuthenticatedStillLoading = (
@@ -52,7 +55,7 @@ export default function Header(): JSX.Element {
     </Nav>
   );
 
-  const IsAuthenticatedLoaded = (data && data.isAuthenticated ? (
+  const IsAuthenticatedLoaded = (wrappedUser?.user ? (
     <Nav className="ml-auto">
       <NavItemLink href="/account">
         <BsPersonSquare />
@@ -102,7 +105,7 @@ export default function Header(): JSX.Element {
               &nbsp;Proxy Example
             </NavItemLink>
           </Nav>
-          {data ? IsAuthenticatedLoaded : IsAuthenticatedStillLoading}
+          {wrappedUser && !isLoggingOut ? IsAuthenticatedLoaded : IsAuthenticatedStillLoading}
         </Navbar.Collapse>
       </Container>
     </Navbar>

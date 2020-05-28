@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
 
 import LoadingButton from '../../components/LoadingButton';
-import useIsAuthenticated from '../../hooks/useIsAuthenticated';
+import useCurrentUser from '../../hooks/useCurrentUser';
 import PasswordChange from '../../components/PasswordChange';
 import AccountContainer from '../../components/AccountContainer';
 
@@ -23,8 +23,8 @@ export default function SignUp(): JSX.Element {
   } = useForm();
   const router = useRouter();
 
-  const { data: isAuthenticatedData, mutate } = useIsAuthenticated();
-  useEffect(() => { if (isAuthenticatedData && isAuthenticatedData.isAuthenticated) router.replace('/'); }, [isAuthenticatedData]);
+  const { wrappedUser, mutate } = useCurrentUser();
+  useEffect(() => { if (wrappedUser?.user) router.replace('/'); }, [wrappedUser]);
 
   const onSubmit = async (data: any): Promise<void> => {
     if (loading) return;
@@ -40,7 +40,7 @@ export default function SignUp(): JSX.Element {
 
       switch (res.status) {
         case 201:
-          mutate(true);
+          mutate(await res.json());
           router.replace('/');
           break;
         case 400: {

@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
 
 import LoadingButton from '../../components/LoadingButton';
-import useIsAuthenticated from '../../hooks/useIsAuthenticated';
+import useCurrentUser from '../../hooks/useCurrentUser';
 import AccountContainer from '../../components/AccountContainer';
 
 export default function ForgotPassword(): JSX.Element {
@@ -25,10 +25,10 @@ export default function ForgotPassword(): JSX.Element {
   } = useForm();
   const router = useRouter();
 
-  const { data: isAuthenticatedData } = useIsAuthenticated();
+  const { wrappedUser } = useCurrentUser();
   useEffect(() => {
-    if (isAuthenticatedData && isAuthenticatedData.isAuthenticated) router.replace('/account');
-  }, [isAuthenticatedData]);
+    if (wrappedUser?.user) router.replace('/account');
+  }, [wrappedUser]);
 
   const onSubmit = async (data: any): Promise<void> => {
     if (loading) return;

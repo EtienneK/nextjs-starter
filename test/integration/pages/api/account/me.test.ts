@@ -1,13 +1,13 @@
 import fetch from 'isomorphic-unfetch';
 import { Model } from 'mongoose';
 
-import handler from '../../../../../pages/api/account/session';
+import handler from '../../../../../pages/api/account/me';
 import AccountModel, { AccountInterface } from '../../../../../models/Account';
 import { getMongooseConnection } from '../../../../../middlewares/mongoose-connection';
 import ApiTestContext from '../ApiTestContext';
 import { login } from '../helpers';
 
-describe('Integration tests for: /api/account/session', () => {
+describe('Integration tests for: /api/account/me', () => {
   let ctx: ApiTestContext;
   let Account: Model<AccountInterface, {}>;
 
@@ -30,7 +30,7 @@ describe('Integration tests for: /api/account/session', () => {
 
   test('GET Should get the logged-in account successfully', async () => {
     // Arrange
-    await new Account({ email, password }).save();
+    const account = await new Account({ email, password }).save();
     const cookie = await login(ctx.serverUrl, { email, password });
 
     // Act
@@ -43,7 +43,10 @@ describe('Integration tests for: /api/account/session', () => {
 
     // Assert
     expect(response.status).toBe(200);
-    expect(await response.text()).toEqual('');
+    expect(await response.json()).toEqual({
+      id: account.id,
+      email,
+    });
   });
 
   test('GET Should NOT get the non-logged-in account', async () => {

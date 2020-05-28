@@ -34,6 +34,13 @@ schema.methods
     return bcrypt.compare(candidatePassword, this.password);
   };
 
+schema.methods.toJSON = function () {
+  return {
+    id: this.id,
+    email: this.email,
+  };
+};
+
 const AccountModel = (conn: Connection): Model<AccountInterface> => (
   conn.models[modelName] ? conn.models[modelName] : conn.model(
     modelName,

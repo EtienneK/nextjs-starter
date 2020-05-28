@@ -31,7 +31,7 @@ describe('Integration tests for: /api/account/login', () => {
   test('POST Should log the user in successfully', async () => {
     // Arrange
     const account = { email: email.toLowerCase(), password };
-    await new Account(account).save();
+    const savedAccount = await new Account(account).save();
     const body = JSON.stringify({ email, password });
 
     // Act
@@ -45,7 +45,7 @@ describe('Integration tests for: /api/account/login', () => {
 
     // Assert
     expect(response.status).toBe(200);
-    expect(await response.text()).toEqual('');
+    expect(await response.json()).toEqual({ id: savedAccount.id, email: email.toLowerCase() });
     expect(response.headers.get('set-cookie')).toContain('connect.sid=');
   });
 

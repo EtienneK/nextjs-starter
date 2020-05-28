@@ -44,7 +44,7 @@ handler.post(
 
     return req.login(account, (err) => {
       if (err) throw err;
-      return res.status(201).end();
+      return res.status(201).json(account);
     });
   },
 );

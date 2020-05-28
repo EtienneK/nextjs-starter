@@ -43,10 +43,10 @@ describe('Integration tests for: /api/account/register', () => {
 
     // Assert
     expect(response.status).toBe(201);
-    expect(await response.text()).toEqual('');
-    const foundUser = await Account.findOne({ email: email.toLowerCase() });
-    expect(foundUser.email).toEqual(email.toLowerCase());
-    expect(await bcrypt.compare(password, foundUser.password)).toBeTruthy();
+    const foundAccount = await Account.findOne({ email: email.toLowerCase() });
+    expect(foundAccount.email).toEqual(email.toLowerCase());
+    expect(await bcrypt.compare(password, foundAccount.password)).toBeTruthy();
+    expect(await response.json()).toEqual({ id: foundAccount.id, email: email.toLowerCase() });
     expect(await Account.countDocuments({})).toEqual(1);
   });
 

@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import LoadingButton from '../../../components/LoadingButton';
 import PasswordChange from '../../../components/PasswordChange';
 import AccountContainer from '../../../components/AccountContainer';
-import useIsAuthenticated from '../../../hooks/useIsAuthenticated';
+import useCurrentUser from '../../../hooks/useCurrentUser';
 
 enum CurrentState {
   CheckingToken,
@@ -25,7 +25,7 @@ enum CurrentState {
 export default function ForgotPasswordReset(): JSX.Element {
   const router = useRouter();
   const { token } = router.query;
-  const { data: isAuthenticatedData } = useIsAuthenticated();
+  const { wrappedUser } = useCurrentUser();
 
   const [currentState, setCurrentState] = useState<CurrentState>(CurrentState.CheckingToken);
 
@@ -132,7 +132,7 @@ export default function ForgotPasswordReset(): JSX.Element {
       <AccountContainer>
         <Alert variant="success">
           <p>Your password has successfully been changed.</p>
-          {isAuthenticatedData?.isAuthenticated
+          {wrappedUser?.user
             ? (<p className="text-center"><Link href="/account"><a>Proceed to account</a></Link></p>)
             : (<p className="text-center"><Link href="/account/login"><a>Proceed to Login</a></Link></p>)}
         </Alert>

@@ -14,7 +14,7 @@ handler.post(
   passport.session() as any,
   passport.authenticate('local') as any,
   async (req, res) => {
-    res.status(200).end();
+    res.status(200).json((req as any).user);
   },
 );
 

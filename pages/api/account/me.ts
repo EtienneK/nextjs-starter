@@ -4,7 +4,6 @@ import mongooseConnection from '../../../middlewares/mongoose-connection';
 import session from '../../../middlewares/session';
 import passport from '../../../middlewares/passport';
 import isAuthenticated from '../../../middlewares/is-authenticated';
-import { AccountInterface } from '../../../models/Account';
 
 const handler = nextConnect();
 
@@ -16,12 +15,7 @@ handler.get(
   passport.session() as any,
   isAuthenticated,
   async (req, res) => {
-    const account = (req as any).user as AccountInterface;
-    const { id, email } = account;
-    res.status(200).json({
-      id,
-      email,
-    });
+    res.status(200).json((req as any).user);
   },
 );
 
