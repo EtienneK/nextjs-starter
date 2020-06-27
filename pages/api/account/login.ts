@@ -1,10 +1,10 @@
-import nextConnect from 'next-connect';
 import nocache from 'nocache';
 import mongooseConnection from '../../../middlewares/mongoose-connection';
 import session from '../../../middlewares/session';
 import passport, { RequestWithLogout } from '../../../middlewares/passport';
+import createHandler from '../../../middlewares/createHandler';
 
-const handler = nextConnect();
+const handler = createHandler();
 
 handler.post(
   nocache(),

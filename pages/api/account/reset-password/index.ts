@@ -1,9 +1,9 @@
 import { nanoid } from 'nanoid';
-import nextConnect from 'next-connect';
+import nextConnect, { IncomingMessage } from 'next-connect';
 import nocache from 'nocache';
 import getConfig from 'next/config';
 
-import mongooseConnection, { RequestWithConn } from '../../../../middlewares/mongoose-connection';
+import mongooseConnection from '../../../../middlewares/mongoose-connection';
 import sendEmail from '../../../../services/send-email';
 import ValidationError from '../../../../validations/ValidationError';
 import validateEmail, { normaliseEmail } from '../../../../validations/email';
@@ -18,7 +18,7 @@ const handler = nextConnect();
 handler.post(
   nocache(),
   mongooseConnection,
-  async (req: RequestWithConn, res) => {
+  async (req: IncomingMessage, res) => {
     let { email } = req.body;
 
     const validationErrors: Array<ValidationError> = [
@@ -29,14 +29,14 @@ handler.post(
 
     email = normaliseEmail(email);
 
-    const Account = AccountModel(req.mongooseConnection);
+    const Account = AccountModel((req as any).mongooseConnection);
 
     const account = await Account.findOne({ email });
     if (!account) {
       return res.status(200).end();
     }
 
-    const ForgotPasswordToken = ForgotPasswordTokenModel(req.mongooseConnection);
+    const ForgotPasswordToken = ForgotPasswordTokenModel((req as any).mongooseConnection);
 
     const token = nanoid();
     if (await ForgotPasswordToken.exists({ accountId: account.id })) return res.status(200).end();

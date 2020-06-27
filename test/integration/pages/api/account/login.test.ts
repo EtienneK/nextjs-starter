@@ -9,7 +9,7 @@ import ApiTestContext from '../ApiTestContext';
 
 describe('Integration tests for: /api/account/login', () => {
   let ctx: ApiTestContext;
-  let Account: Model<AccountInterface, {}>;
+  let Account: Model<AccountInterface, unknown>;
 
   beforeAll(async () => {
     ctx = new ApiTestContext();
@@ -33,6 +33,10 @@ describe('Integration tests for: /api/account/login', () => {
     const account = { email: email.toLowerCase(), password };
     const savedAccount = await new Account(account).save();
     const body = JSON.stringify({ email, password });
+
+    console.log(' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ');
+    console.log(ctx.serverUrl);
+    console.log(' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ');
 
     // Act
     const response = await fetch(ctx.serverUrl, {

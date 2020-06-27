@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { IncomingMessage } from 'next-connect';
-import { RequestWithConn } from './mongoose-connection';
 import AccountModel, { AccountInterface } from '../models/Account';
 import { normaliseEmail } from '../validations/email';
 
@@ -11,10 +10,10 @@ passport.serializeUser((account: AccountInterface, done) => {
 });
 
 passport.deserializeUser(async (
-  req: RequestWithConn, id: string, done: (err: any, account?: AccountInterface) => void,
+  req: IncomingMessage, id: string, done: (err: any, account?: AccountInterface) => void,
 ) => {
   try {
-    const Account = AccountModel(req.mongooseConnection);
+    const Account = AccountModel((req as any).mongooseConnection);
     const account = await Account.findById(id);
     done(null, account);
   } catch (err) {
@@ -26,7 +25,7 @@ passport.use(
   new LocalStrategy(
     { usernameField: 'email', passReqToCallback: true },
     async (req, email, password, done) => {
-      const Account = AccountModel(((req as unknown) as RequestWithConn).mongooseConnection);
+      const Account = AccountModel((req as any).mongooseConnection);
       const normalizedEmail = normaliseEmail(email);
       if (!normalizedEmail) return done(null, false, { message: 'Invalid email or password.' });
       const account = await Account.findOne({ email: normalizedEmail });

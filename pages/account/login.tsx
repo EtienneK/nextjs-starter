@@ -51,7 +51,7 @@ export default function Login(): JSX.Element {
           throw new Error('An unknown error has occured. Please try again later.');
       }
     } catch (err) {
-      setError('unknown', 'unknown');
+      setError('unknown', 'unknown', err.message);
       setLoading(false);
     }
   };

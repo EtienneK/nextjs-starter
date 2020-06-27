@@ -1,13 +1,12 @@
 import expressSession from 'express-session';
 import connectMongo from 'connect-mongo';
-
-import { RequestWithConn } from './mongoose-connection';
+import { IncomingMessage } from 'http';
 
 const MongoStore = connectMongo(expressSession);
 
-export default function session(req: RequestWithConn, res, next): any {
+export default function session(req: IncomingMessage, res, next): any {
   const mongoStore = new MongoStore({
-    mongooseConnection: req.mongooseConnection,
+    mongooseConnection: (req as any).mongooseConnection,
   });
   return expressSession({
     store: mongoStore,
