@@ -1,6 +1,7 @@
 import assert from 'assert';
 import mongoose, { Connection } from 'mongoose';
-import { IncomingMessage, NextHandler, ServerResponse } from 'next-connect';
+import { NextHandler } from 'next-connect';
+import { IncomingMessage, ServerResponse } from 'http';
 
 let conn: Connection = null;
 

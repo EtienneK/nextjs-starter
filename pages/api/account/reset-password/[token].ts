@@ -1,4 +1,4 @@
-import { IncomingMessage } from 'next-connect';
+import { NextApiRequest, NextApiResponse } from 'next';
 import nocache from 'nocache';
 import { isArray } from 'util';
 
@@ -15,7 +15,7 @@ const handler = createHandler();
 handler.get(
   nocache(),
   mongooseConnection,
-  async (req: IncomingMessage, res) => {
+  async (req: NextApiRequest, res: NextApiResponse) => {
     const { query: { token } } = (req as any);
     if (!token || isArray(token)) return res.status(404).end();
 
@@ -30,7 +30,7 @@ handler.get(
 handler.post(
   nocache(),
   mongooseConnection,
-  async (req: IncomingMessage, res) => {
+  async (req: NextApiRequest, res: NextApiResponse) => {
     const { query: { token } } = (req as any);
     if (!token || isArray(token)) return res.status(404).end();
 

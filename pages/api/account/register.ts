@@ -1,4 +1,4 @@
-import { IncomingMessage } from 'http';
+import { NextApiRequest, NextApiResponse } from 'next';
 import nocache from 'nocache';
 
 import mongooseConnection from '../../../middlewares/mongoose-connection';
@@ -19,9 +19,9 @@ handler.post(
   session,
   passport.initialize() as any,
   passport.session() as any,
-  async (req: IncomingMessage & RequestWithLogin, res) => {
-    let { email } = req.body;
-    const { password, confirmPassword } = req.body;
+  async (req: NextApiRequest & RequestWithLogin, res: NextApiResponse) => {
+    let { email } = (req as any).body;
+    const { password, confirmPassword } = (req as any).body;
     const validationErrors: Array<ValidationError> = [
       ...validateEmail(email),
       ...validatePasswordChange(password, confirmPassword),

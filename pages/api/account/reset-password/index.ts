@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import nextConnect, { IncomingMessage } from 'next-connect';
+import nextConnect from 'next-connect';
 import nocache from 'nocache';
 import getConfig from 'next/config';
 
@@ -10,6 +10,7 @@ import validateEmail, { normaliseEmail } from '../../../../validations/email';
 
 import ForgotPasswordTokenModel from '../../../../models/ForgotPasswordToken';
 import AccountModel from '../../../../models/Account';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const { publicRuntimeConfig: { appName } } = getConfig();
 
@@ -18,7 +19,7 @@ const handler = nextConnect();
 handler.post(
   nocache(),
   mongooseConnection,
-  async (req: IncomingMessage, res) => {
+  async (req: NextApiRequest, res: NextApiResponse) => {
     let { email } = req.body;
 
     const validationErrors: Array<ValidationError> = [

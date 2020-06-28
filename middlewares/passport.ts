@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { IncomingMessage } from 'next-connect';
 import AccountModel, { AccountInterface } from '../models/Account';
 import { normaliseEmail } from '../validations/email';
+import { IncomingMessage } from 'http';
 
 passport.serializeUser((account: AccountInterface, done) => {
   done(null, account.id);
