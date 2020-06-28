@@ -9,7 +9,7 @@ import ApiTestContext from '../ApiTestContext';
 
 describe('Integration tests for: /api/account/register', () => {
   let ctx: ApiTestContext;
-  let Account: Model<AccountInterface, {}>;
+  let Account: Model<AccountInterface, unknown>;
 
   beforeAll(async () => {
     ctx = new ApiTestContext();

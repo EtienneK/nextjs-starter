@@ -14,10 +14,11 @@ export default class ApiTestContext {
   _serverUrl: string;
 
   async init(handler: NextConnect): Promise<void> {
-    handler.use('/login', loginHandler);
-
     this._server = http.createServer(
-      (req, res) => apiResolver(req, res, undefined, handler, undefined),
+      (req, res) => {
+        if (req.url === '/login') return apiResolver(req, res, undefined, loginHandler, undefined);
+        return apiResolver(req, res, undefined, handler, undefined);
+      },
     );
     this._serverUrl = await listen(this._server);
     this._mongoServer = new MongoMemoryServer();

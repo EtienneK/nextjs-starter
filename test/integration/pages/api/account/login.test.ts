@@ -34,10 +34,6 @@ describe('Integration tests for: /api/account/login', () => {
     const savedAccount = await new Account(account).save();
     const body = JSON.stringify({ email, password });
 
-    console.log(' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ');
-    console.log(ctx.serverUrl);
-    console.log(' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ');
-
     // Act
     const response = await fetch(ctx.serverUrl, {
       method: 'POST',
